@@ -63,20 +63,6 @@ const Calculator = ({ persons, totalTips, taxMethod, updatePersonArray }) => {
     default:
         break;
 }
-//   console.log(taxes);
-//   console.log(hoursSum);
-  
-
-      
-  
-//   const perHour = Math.floor(moneyAfterTaxes / hoursSum);
-  
-//   const newPersonArray = persons.map((person) => ({
-//     ...person,
-//     money: person.hoursSum * perHour,
-//   }));
-  
-    // TODO: Update the state or dispatch the calculated data
 
 };
   
