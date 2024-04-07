@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import {useReducer, useState} from 'react';
 import { HomePageReducer, initialState } from './HomePageReducer';
 import  Alert  from 'react-bootstrap/Alert';
-import '../../container/App.css'
+import '../../App.css'
 
 const HomePage = () => {
     const [personsState, setPersonsState] = useState({
