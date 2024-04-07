@@ -1,4 +1,15 @@
-const Calculator = ({ persons, totalTips, taxMethod, updatePersonArray }) => {
+import { useState } from "react";
+import  Button  from "react-bootstrap/Button";
+const Calculator = ({ persons, totalTips, taxMethod, updatePersonArray, sendData }) => {
+
+    const[MoneyPerHour, SetMoneyPerHour] = useState(0);
+    const[TaxesTotal, SetTaxesTotal] = useState(0);
+
+    const sendDataToParant = () => {
+        sendData(MoneyPerHour, TaxesTotal);
+    }
+
+
     const calculateHandler = () => {
     let moneyAfterTaxes = 0;
     let hoursSum = 0;
@@ -17,12 +28,14 @@ const Calculator = ({ persons, totalTips, taxMethod, updatePersonArray }) => {
         case 0:{
             taxes = 0;
             const perHour = Math.floor(money / hoursSum);
+            SetMoneyPerHour(perHour);
+            SetTaxesTotal(taxes);
             const newPersonArray = persons.map((person) => ({
                 ...person,
                 money: person.hoursSum * perHour,
             }));
             updatePersonArray(newPersonArray);
-
+            sendDataToParant();
             break;
     }
     case 1:{
@@ -32,43 +45,54 @@ const Calculator = ({ persons, totalTips, taxMethod, updatePersonArray }) => {
         moneyAfterTaxes = money - taxes;
         console.log("moneyAfterTaxes :" + moneyAfterTaxes);
         if(moneyAfterTaxes / hoursSum <= 30){
+            taxes = 0;
             moneyAfterTaxes = money;
             console.log("moneyAfterTaxes fixed : " + moneyAfterTaxes)
         }
-
+        SetTaxesTotal(taxes);
         // flooring perHour so we won't have a lot of numbers after dot
         const perHour = Math.floor(moneyAfterTaxes / hoursSum);
-  
+        SetMoneyPerHour(perHour);
         console.log("per Hour: " + perHour)
         const newPersonArray = persons.map((person) => ({
             ...person,
             money: person.hoursSum * perHour,
         }));
         updatePersonArray(newPersonArray);
-
+        sendDataToParant();
 
         break;
     }
     case 2:{
         const perHour = Math.floor(money / hoursSum);
-        const newPersonArray = persons.map((person) => ({
-            ...person,
-            money: Math.floor((person.hoursSum * perHour) * 0.93),
-        }));
-        updatePersonArray(newPersonArray);
+        SetMoneyPerHour(perHour);
+        let TaxFloorCounter = 0.0;
 
+        const newPersonArray = persons.map((person) => {
+            let taxPerLoop = Math.floor((person.hoursSum * perHour) * 0.93);
+            TaxFloorCounter = TaxFloorCounter + (Math.floor((person.hoursSum * perHour) * 0.07));
+            return {
+              ...person,
+              money: taxPerLoop
+            };
+        });
+        updatePersonArray(newPersonArray);
+        SetTaxesTotal(TaxFloorCounter);
+        TaxFloorCounter = 0;
+        console.log("per Hour: " + perHour)
+        sendDataToParant();
 
         break;
     }
-    default:
-        break;
+    default:{break;}
+
 }
 
 };
   
     return (
       <div>
-        <button onClick={calculateHandler}>Calculate!</button>
+        <Button className="calculator" onClick={calculateHandler}>Calculate!</Button>
       </div>
     );
   };
